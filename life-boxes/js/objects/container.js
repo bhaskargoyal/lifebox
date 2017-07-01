@@ -14,6 +14,7 @@
  *          y: number
  *      },
  *      numberOfLifeboxes: number,
+ *      numberOfLifeBoxesToFill: number,
  *      boxStrokeColor: Color Object,
  *      boxFillColor: Color Object,
  *      boxRoundCorner: {
@@ -84,6 +85,13 @@ function Container(options) {
     if(typeof this.numberOfLifeboxes !== "number") {
         throw new ContainerException("numberOfLifeboxes property not of number type");
     }
+    this.numberOfLifeboxesToFill = Math.floor(options.numberOfLifeboxesToFill) || 0;
+    if(typeof this.numberOfLifeboxesToFill !== "number") {
+        throw new ContainerException("numberOfLifeboxesToFill property not of number type");
+    }
+    if(this.numberOfLifeboxesToFill > this.numberOfLifeboxes) {
+        this.numberOfLifeboxesToFill = this.numberOfLifeboxes;
+    }
     this.boxStrokeColor = options.boxStrokeColor || color(0);
     if(typeof this.boxStrokeColor !== "object") {
         throw new ContainerException("boxStrokeColor property is not of object type");
@@ -146,12 +154,11 @@ function Container(options) {
     } else {
         throw new ContainerException("neither Lifebox dimensions were specified nor Spacing dimenstion.");
     }
-
     // make boxes array
     this.boxes = [];
     for(let i=0; i<this.countCells.x; i++) {
         for(let j=0; j<this.countCells.y; j++){
-            if(i*this.countCells.y + j < this.numberOfLifeboxes) {
+            if(i*this.countCells.y + j < this.numberOfLifeboxesToFill) {
                 let options = {};
                 options.width = this.boxDimensions.x;
                 options.height = this.boxDimensions.y;
@@ -161,7 +168,13 @@ function Container(options) {
                 options.roundCorner = this.boxRoundCorner;
                 options.fillColor = this.boxFillColor;
                 this.boxes.push(new Lifebox(options));
-            }            
+            } else if (i*this.countCells.y + j < this.numberOfLifeboxes) {
+                let options = {};
+                options.width = this.boxDimensions.x;
+                options.height = this.boxDimensions.y;
+                options.rectMode = this.boxRectMode;
+                this.boxes.push(new Lifebox(options));
+            }           
         }
     }
 
