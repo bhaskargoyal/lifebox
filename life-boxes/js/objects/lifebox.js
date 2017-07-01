@@ -1,6 +1,6 @@
 /*
  * LifeBox 
- * @options object as parameter
+ * @options: object
  * throws LifeboxExpception(string)
  * options: {
  *      halfWidth: number,
@@ -31,9 +31,15 @@ function Lifebox(options) {
     if(typeof this.halfWidth !== "number") {
         throw new LifeboxException("halfWidth property is not of number type");
     }
+    if(this.halfWidth < 0) {
+        throw new LifeboxException("halfWidth property should be greater than or equal to 0");
+    }
     this.halfHeight = options.halfHeight || options.height/2 || 0;
     if(typeof this.halfHeight !== "number") {
         throw new LifeboxException("halfHeight property is not of number type");
+    }
+    if(this.halfHeight < 0) {
+        throw new LifeboxException("halfHeight property should be greater than or equal to 0");
     }
     this.width = options.width || options.halfWidth*2 || 0;
     if(typeof this.width !== "number") {
@@ -42,12 +48,18 @@ function Lifebox(options) {
     if(options.width && options.halfWidth) {
         this.halfWidth = this.width*2;
     }
+    if(this.width < 0) {
+        throw new LifeboxException("width property should be greater than or equal to 0");
+    }
     this.height = options.height || options.halfHeight*2 || 0;
     if(typeof this.height !== "number") {
         throw new LifeboxException("height property is not of number type");
     }
     if(options.height && options.halfHeight) {
         this.halfHeight = this.height*2;
+    }
+    if(this.height < 0) {
+        throw new LifeboxException("height property should be greater than or equal to 0");
     }
     this.strokeColor = options.strokeColor || color(0);
     if(typeof this.strokeColor !== "object") {
