@@ -160,7 +160,56 @@ function Container(options) {
         throw new ContainerException("filledBoxRectMode property is not of string type");
     }
 
+    this.initialise();
     // constructing boxes array
+    
+
+}
+
+Container.prototype.draw = function(x, y) {
+    // this.boxes[0].draw(x,y);
+    // rect(x,y, this.width, this.height);
+    for(let i=0, index=0, yDimension=0; i<this.countCells.y; i++, yDimension+=this.cellDimensions.y) {
+        for(let j=0, xDimension=0; j<this.countCells.x; j++, xDimension+=this.cellDimensions.x) {
+            if(index < this.numberOfLifeboxes) {
+                this.boxes[index].draw(x+xDimension+(this.cellDimensions.x-this.boxDimensions.x)/2, y+yDimension+(this.cellDimensions.y-this.boxDimensions.y)/2);
+            }
+            index++;
+        }
+    }
+}
+
+Container.prototype.setNumberOfLifeboxes = function(numberOfLifeboxes) {
+    if(typeof numberOfLifeboxes === "undefined") {
+        throw new ContainerException("numberOfLifeboxes property is undefined in setter");
+    }
+    if(typeof numberOfLifeboxes !== "number") {
+        throw new ContainerException("numberOfLifeboxes property is not of type number in setter");
+    }
+    this.numberOfLifeboxes = numberOfLifeboxes;
+}
+
+Container.prototype.setNumberOfLifeboxesToFill = function(numberOfLifeboxesToFill) {
+    if(typeof numberOfLifeboxesToFill === "undefined") {
+        throw new ContainerException("numberOfLifeboxesToFill property is undefined in setter");
+    }
+    if(typeof numberOfLifeboxesToFill !== "number") {
+        throw new ContainerException("numberOfLifeboxesToFill property is not of type number in setter");
+    }
+    this.numberOfLifeboxesToFill = numberOfLifeboxesToFill;
+}
+
+
+
+
+
+
+
+Container.prototype.update = function(){
+    this.initialise();
+}
+
+Container.prototype.initialise = function (){
     this.countCells = {
         x: 0,
         y: 0
@@ -220,23 +269,7 @@ function Container(options) {
             }           
         }
     }
-
 }
-
-Container.prototype.draw = function(x, y) {
-    // this.boxes[0].draw(x,y);
-    // rect(x,y, this.width, this.height);
-    for(let i=0, index=0, yDimension=0; i<this.countCells.y; i++, yDimension+=this.cellDimensions.y) {
-        for(let j=0, xDimension=0; j<this.countCells.x; j++, xDimension+=this.cellDimensions.x) {
-            if(index < this.numberOfLifeboxes) {
-                this.boxes[index].draw(x+xDimension+(this.cellDimensions.x-this.boxDimensions.x)/2, y+yDimension+(this.cellDimensions.y-this.boxDimensions.y)/2);
-            }
-            index++;
-        }
-    }
-}
-
-
 
 
 
