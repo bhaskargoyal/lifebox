@@ -15,3 +15,9 @@ html, body {
     position: absolute;
     z-index: 20;
 }
+
+#life-expectancy-input-box {
+    position: absolute;
+    z-index: 20;
+    top: 10%;
+}

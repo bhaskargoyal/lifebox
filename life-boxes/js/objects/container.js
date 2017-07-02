@@ -24,7 +24,18 @@
  *          bottomLeft: number
  *      }, 
  *      boxStrokeWeight: number,
- *      boxRectMode: string
+ *      boxRectMode: string,
+ *      filledBoxStrokeColor: Color Object,
+ *      filledBoxFillColor: Color Object,
+ *      filledBoxRoundCorner: {
+ *          topLeft: number,
+ *          topRight: number,
+ *          bottomRight: number,
+ *          bottomLeft: number
+ *      }, 
+ *      filledBoxStrokeWeight: number,
+ *      filledBoxRectMode: string
+ * 
  * }
  * @more properties of the Container oject: {            
  *      boxes: array,
@@ -120,6 +131,34 @@ function Container(options) {
     if(typeof this.boxRectMode !== "string") {
         throw new ContainerException("boxRectMode property is not of string type");
     }
+    this.filledBoxStrokeColor = options.filledBoxStrokeColor || color(0);
+    if(typeof this.filledBoxStrokeColor !== "object") {
+        throw new ContainerException("filledBoxStrokeColor property is not of object type");
+    }
+    this.filledBoxFillColor = options.filledBoxFillColor || color(255);
+    if(typeof this.filledBoxFillColor !== "object") {
+        throw new ContainerException("filledBoxFillColor property is not of object type");
+    }
+    this.filledBoxRoundCorner = options.filledBoxRoundCorner || {
+        topLeft: 0,
+        topRight: 0,
+        bottomRight: 0,
+        bottomLeft: 0
+    }
+    if(typeof this.filledBoxRoundCorner !== "object" || typeof this.filledBoxRoundCorner.topLeft !== "number" || typeof this.filledBoxRoundCorner.topRight !== "number" || typeof this.filledBoxRoundCorner.bottomRight !== "number" || typeof this.filledBoxRoundCorner.bottomLeft !== "number") {
+        throw new ContainerException("filledBoxRoundCorner property either not of object type or not properly defined");
+    }
+    this.filledBoxStrokeWeight = options.filledBoxStrokeWeight || 1;
+    if(typeof this.filledBoxStrokeWeight !== "number") {
+        throw new ContainerException("filledBoxStrokeWeight property is not of number type");
+    }
+    this.filledBoxRectMode = options.filledBoxRectMode || RADIUS;
+    if(this.filledBoxRectMode !== RADIUS && this.filledBoxRectMode !== CENTER && this.filledBoxRectMode !== CORNER && this.filledBoxRectMode != CORNERS) {
+        this.filledBoxRectMode = RADIUS;
+    }
+    if(typeof this.filledBoxRectMode !== "string") {
+        throw new ContainerException("filledBoxRectMode property is not of string type");
+    }
 
     // constructing boxes array
     this.countCells = {
@@ -162,17 +201,21 @@ function Container(options) {
                 let options = {};
                 options.width = this.boxDimensions.x;
                 options.height = this.boxDimensions.y;
-                options.rectMode = this.boxRectMode;
-                options.strokeColor = this.boxStrokeColor;
-                options.strokeWeight = this.boxStrokeWeight;
-                options.roundCorner = this.boxRoundCorner;
-                options.fillColor = this.boxFillColor;
+                options.rectMode = this.filledBoxRectMode;
+                options.strokeColor = this.filledBoxStrokeColor;
+                options.strokeWeight = this.filledBoxStrokeWeight;
+                options.roundCorner = this.filledBoxRoundCorner;
+                options.fillColor = this.filledBoxFillColor;
                 this.boxes.push(new Lifebox(options));
             } else if (i*this.countCells.y + j < this.numberOfLifeboxes) {
                 let options = {};
                 options.width = this.boxDimensions.x;
                 options.height = this.boxDimensions.y;
                 options.rectMode = this.boxRectMode;
+                options.strokeColor = this.boxStrokeColor;
+                options.strokeWeight = this.boxStrokeWeight;
+                options.roundCorner = this.boxRoundCorner;
+                options.fillColor = this.boxFillColor;
                 this.boxes.push(new Lifebox(options));
             }           
         }
@@ -182,10 +225,11 @@ function Container(options) {
 
 Container.prototype.draw = function(x, y) {
     // this.boxes[0].draw(x,y);
-    for(let i=0, index=0, yDimension=this.cellDimensions.y; i<this.countCells.y; i++, yDimension+=this.cellDimensions.y) {
-        for(let j=0, xDimension=this.cellDimensions.x; j<this.countCells.x; j++, xDimension+=this.cellDimensions.x) {
+    // rect(x,y, this.width, this.height);
+    for(let i=0, index=0, yDimension=0; i<this.countCells.y; i++, yDimension+=this.cellDimensions.y) {
+        for(let j=0, xDimension=0; j<this.countCells.x; j++, xDimension+=this.cellDimensions.x) {
             if(index < this.numberOfLifeboxes) {
-                this.boxes[index].draw(x+xDimension, y+yDimension);
+                this.boxes[index].draw(x+xDimension+(this.cellDimensions.x-this.boxDimensions.x)/2, y+yDimension+(this.cellDimensions.y-this.boxDimensions.y)/2);
             }
             index++;
         }
