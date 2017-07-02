@@ -22,7 +22,7 @@ function draw() {
     // var numberofWeeksinLife = 1;
     background('white');
     var c = new Container({
-        width: windowHeight,
+        width: windowWidth - 350,
         height: windowHeight,
         numberOfLifeboxesToFill: numberofWeeks,
         numberOfLifeboxes: numberofWeeksinLife,
